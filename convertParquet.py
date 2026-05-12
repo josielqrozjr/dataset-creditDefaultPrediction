@@ -8,12 +8,15 @@ import time
 
 RAW_DIR = Path("data/raw")
 
+TRAIN_LABELS_CSV = RAW_DIR / "train_labels.csv"
 TRAIN_CSV = RAW_DIR / "train_data.csv"
 TEST_CSV = RAW_DIR / "test_data.csv"
 
+TRAIN_LABELS_OUTPUT = Path("data/parquet/train_labels")
 TRAIN_OUTPUT = Path("data/parquet/train")
 TEST_OUTPUT = Path("data/parquet/test")
 
+TRAIN_LABELS_OUTPUT.mkdir(parents=True, exist_ok=True)
 TRAIN_OUTPUT.mkdir(parents=True, exist_ok=True)
 TEST_OUTPUT.mkdir(parents=True, exist_ok=True)
 
@@ -69,6 +72,12 @@ TO '{output_dir}'
 # =========================
 # EXECUÇÃO
 # =========================
+
+convert_csv_to_parquet(
+    TRAIN_LABELS_CSV,
+    TRAIN_LABELS_OUTPUT,
+    "TRAIN_LABELS"
+)
 
 convert_csv_to_parquet(
     TRAIN_CSV,
