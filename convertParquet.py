@@ -6,23 +6,20 @@ import time
 # CONFIGURAÇÕES
 # =========================
 
-RAW_DIR = Path("data/raw")
+RAW_DIR = Path("data/raw/csv")
 
 TRAIN_LABELS_CSV = RAW_DIR / "train_labels.csv"
 TRAIN_CSV = RAW_DIR / "train_data.csv"
-TEST_CSV = RAW_DIR / "test_data.csv"
 
-TRAIN_LABELS_OUTPUT = Path("data/parquet/train_labels")
-TRAIN_OUTPUT = Path("data/parquet/train")
-TEST_OUTPUT = Path("data/parquet/test")
+TRAIN_LABELS_OUTPUT = Path("data/raw/parquet/train_labels")
+TRAIN_OUTPUT = Path("data/raw/parquet/train")
 
 TRAIN_LABELS_OUTPUT.mkdir(parents=True, exist_ok=True)
 TRAIN_OUTPUT.mkdir(parents=True, exist_ok=True)
-TEST_OUTPUT.mkdir(parents=True, exist_ok=True)
 
 # Quantidade de linhas por row group
 # (ajuste conforme RAM)
-ROW_GROUP_SIZE = 1_000_000
+ROW_GROUP_SIZE = 250_000
 
 # =========================
 # CONEXÃO DUCKDB
@@ -73,22 +70,16 @@ TO '{output_dir}'
 # EXECUÇÃO
 # =========================
 
-convert_csv_to_parquet(
-    TRAIN_LABELS_CSV,
-    TRAIN_LABELS_OUTPUT,
-    "TRAIN_LABELS"
-)
+# convert_csv_to_parquet(
+#     TRAIN_LABELS_CSV,
+#     TRAIN_LABELS_OUTPUT,
+#     "TRAIN_LABELS"
+# )
 
 convert_csv_to_parquet(
     TRAIN_CSV,
     TRAIN_OUTPUT,
     "TRAIN"
-)
-
-convert_csv_to_parquet(
-    TEST_CSV,
-    TEST_OUTPUT,
-    "TEST"
 )
 
 print("\nConversão finalizada.")
