@@ -19,7 +19,7 @@ TRAIN_OUTPUT.mkdir(parents=True, exist_ok=True)
 
 # Quantidade de linhas por row group
 # (ajuste conforme RAM)
-ROW_GROUP_SIZE = 250_000
+ROW_GROUP_SIZE = 1_000_000
 
 # =========================
 # CONEXÃO DUCKDB

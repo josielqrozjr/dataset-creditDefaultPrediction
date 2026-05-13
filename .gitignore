@@ -276,3 +276,20 @@ Backups.backupdb
 .MobileBackups.trash
 MobileBackups.trash
 tmbootpicker.efi
+
+# datasets
+data/
+
+# parquet
+*.parquet
+
+# modelos
+*.pkl
+*.joblib
+
+# python
+__pycache__/
+.venv/
+
+# mac
+.DS_Store
