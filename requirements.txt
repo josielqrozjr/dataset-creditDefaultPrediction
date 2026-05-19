@@ -4,3 +4,7 @@ pandas
 scipy
 matplotlib
 seaborn
+torch
+scikit-learn
+lightgbm
+shap
