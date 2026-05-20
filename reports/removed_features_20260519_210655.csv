@@ -1,0 +1,86 @@
+Feature,Motivo
+D_39,ID (cardinalidade = n_amostras)
+B_1,ID (cardinalidade = n_amostras)
+R_1,ID (cardinalidade = n_amostras)
+B_4,ID (cardinalidade = n_amostras)
+B_5,ID (cardinalidade = n_amostras)
+R_2,ID (cardinalidade = n_amostras)
+D_47,ID (cardinalidade = n_amostras)
+B_7,ID (cardinalidade = n_amostras)
+D_51,ID (cardinalidade = n_amostras)
+B_9,ID (cardinalidade = n_amostras)
+R_3,ID (cardinalidade = n_amostras)
+B_10,ID (cardinalidade = n_amostras)
+S_5,ID (cardinalidade = n_amostras)
+B_11,ID (cardinalidade = n_amostras)
+S_6,ID (cardinalidade = n_amostras)
+R_4,ID (cardinalidade = n_amostras)
+B_12,ID (cardinalidade = n_amostras)
+S_8,ID (cardinalidade = n_amostras)
+R_5,ID (cardinalidade = n_amostras)
+D_58,ID (cardinalidade = n_amostras)
+B_14,ID (cardinalidade = n_amostras)
+D_60,ID (cardinalidade = n_amostras)
+S_11,ID (cardinalidade = n_amostras)
+D_65,ID (cardinalidade = n_amostras)
+B_18,ID (cardinalidade = n_amostras)
+S_12,ID (cardinalidade = n_amostras)
+R_6,ID (cardinalidade = n_amostras)
+S_13,ID (cardinalidade = n_amostras)
+B_21,ID (cardinalidade = n_amostras)
+D_71,ID (cardinalidade = n_amostras)
+S_15,ID (cardinalidade = n_amostras)
+B_23,ID (cardinalidade = n_amostras)
+P_4,ID (cardinalidade = n_amostras)
+D_75,ID (cardinalidade = n_amostras)
+B_24,ID (cardinalidade = n_amostras)
+R_7,ID (cardinalidade = n_amostras)
+R_8,ID (cardinalidade = n_amostras)
+S_16,ID (cardinalidade = n_amostras)
+R_10,ID (cardinalidade = n_amostras)
+R_11,ID (cardinalidade = n_amostras)
+S_17,ID (cardinalidade = n_amostras)
+B_28,ID (cardinalidade = n_amostras)
+R_13,ID (cardinalidade = n_amostras)
+R_14,ID (cardinalidade = n_amostras)
+R_15,ID (cardinalidade = n_amostras)
+R_16,ID (cardinalidade = n_amostras)
+S_18,ID (cardinalidade = n_amostras)
+D_86,ID (cardinalidade = n_amostras)
+R_17,ID (cardinalidade = n_amostras)
+R_18,ID (cardinalidade = n_amostras)
+S_19,ID (cardinalidade = n_amostras)
+R_19,ID (cardinalidade = n_amostras)
+B_32,ID (cardinalidade = n_amostras)
+S_20,ID (cardinalidade = n_amostras)
+R_21,ID (cardinalidade = n_amostras)
+R_22,ID (cardinalidade = n_amostras)
+R_23,ID (cardinalidade = n_amostras)
+D_92,ID (cardinalidade = n_amostras)
+D_93,ID (cardinalidade = n_amostras)
+D_94,ID (cardinalidade = n_amostras)
+R_24,ID (cardinalidade = n_amostras)
+R_25,ID (cardinalidade = n_amostras)
+D_96,ID (cardinalidade = n_amostras)
+B_36,ID (cardinalidade = n_amostras)
+D_127,ID (cardinalidade = n_amostras)
+R_28,ID (cardinalidade = n_amostras)
+D_87,Constante
+B_31,Quase-constante (>99%)
+D_49,Missing 90%
+D_73,Missing 99%
+R_9,Missing 94%
+B_29,Missing 93%
+D_88,Missing 100%
+D_106,Missing 90%
+D_108,Missing 99%
+D_110,Missing 99%
+D_111,Missing 99%
+B_39,Missing 99%
+B_42,Missing 99%
+D_132,Missing 90%
+D_134,Missing 96%
+D_135,Missing 96%
+D_136,Missing 96%
+D_137,Missing 96%
+D_138,Missing 96%
