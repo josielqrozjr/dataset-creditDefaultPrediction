@@ -3,8 +3,11 @@ Pipeline Híbrido de Preparação de Dados (DuckDB + Polars)
 ---------------------------------------------------------
 1. DuckDB: Lê os arquivos brutos particionados e aplica engenharia temporal via SQL.
 2. Handoff: Salva um arquivo Parquet intermediário em disco (para evitar OOM na RAM).
-3. Polars: Lê o arquivo intermediário (Lazy), aplica agregações matemáticas avançadas
+   2.1 Polars: Lê o arquivo intermediário (Lazy), aplica agregações matemáticas avançadas
    (trend features) e salva o tabular final.
+3. Merge e Split Estratificado: Junta o treino e teste, depois separa novamente mantendo a 
+   proporção de inadimplentes.
+4. Polars/LGBM: Faz o merge, split estratificado e seleção de features inteligente.
 """
 
 import os
@@ -14,10 +17,10 @@ import polars as pl
 import logging
 import gc
 
-# Certifique-se de que a EngenhariaTemporal aqui é a versão que gera SQL
+# Importações das classes do Pipeline
 from pipeline.feature_engineering import EngenhariaTemporal
-# E o Agregador é a versão Polars
 from pipeline.aggregation import AgregadorClientePolars
+from pipeline.feature_selection import SelecionadorFeaturesAMEX
 
 logging.basicConfig(
     level=logging.INFO,
@@ -27,12 +30,12 @@ logger = logging.getLogger(__name__)
 
 def main():
     # ---------------------------------------------------------
-    # CONFIGURAÇÃO DE CAMINHOS
+    # CONFIGURAÇÃO DE CAMINHOS GERAIS
     # ---------------------------------------------------------
     caminho_input_glob = "./data/raw/parquet/train/data_*.parquet"
     caminho_output_dir = "./data/processed/"
     
-    # Arquivos de saída
+    # Arquivos de saída das Fases 1 e 2
     arquivo_intermediario = os.path.join(caminho_output_dir, "temp_temporal.parquet")
     arquivo_final = os.path.join(caminho_output_dir, "train_tabular_final.parquet")
     
@@ -113,8 +116,6 @@ def main():
     except OSError as e:
         logger.warning(f"Não foi possível remover o arquivo intermediário: {e}")
 
-    logger.info("=== PIPELINE HÍBRIDO FINALIZADO ===")
-
     # =========================================================
     # FASE 3: MERGE E SPLIT ESTRATIFICADO
     # =========================================================
@@ -122,9 +123,46 @@ def main():
     try:
         from pipeline.merge_split import merge_and_split
         merge_and_split()
+        logger.info("Fase 3 (Merge e Split) concluída com sucesso.")
     except Exception as e:
         logger.exception(f"Erro na Fase 3 (Merge e Split Estratificado): {e}")
         return
+
+    # =========================================================
+    # FASE 4: FEATURE SELECTION (Somente no Treino)
+    # =========================================================
+    logger.info("=== INICIANDO FASE 4: FEATURE SELECTION ===")
+    try:
+        # Configuração de caminhos específicos para a seleção
+        caminho_treino_split = "./data/processed/split/train_80.parquet"
+        caminho_saida_selecao = "./data/processed/selection/train_80_selected.parquet"
+        caminho_lista_features = "./data/processed/selection/selected_features_list.txt"
+        
+        os.makedirs(os.path.dirname(caminho_saida_selecao), exist_ok=True)
+        
+        logger.info(f"Lendo base de treino (80%) para seleção: {caminho_treino_split}")
+        # Usamos read_parquet (em memória) porque a base já está comprimida e agregada
+        df_train_80 = pl.read_parquet(caminho_treino_split)
+        
+        selecionador = SelecionadorFeaturesAMEX()
+        df_train_selected = selecionador.selecionar(df_train_80)
+        
+        logger.info(f"Salvando dataset selecionado em: {caminho_saida_selecao}")
+        df_train_selected.write_parquet(caminho_saida_selecao)
+        
+        # Salva a lista de colunas finais para replicar na base de validação depois
+        logger.info("Exportando lista de features selecionadas (.txt)...")
+        with open(caminho_lista_features, "w") as f:
+            for col in df_train_selected.columns:
+                f.write(f"{col}\n")
+                
+        logger.info("Fase 4 (Feature Selection) concluída com sucesso.")
+        
+    except Exception as e:
+        logger.exception(f"Erro na Fase 4 (Feature Selection): {e}")
+        return
+
+    logger.info("=== PIPELINE COMPLETO FINALIZADO COM SUCESSO ===")
 
 if __name__ == "__main__":
     main()
