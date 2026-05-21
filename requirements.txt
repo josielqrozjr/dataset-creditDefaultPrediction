@@ -1,4 +1,5 @@
 duckdb
+polars
 numpy
 pandas
 scipy
@@ -8,3 +9,5 @@ torch
 scikit-learn
 lightgbm
 shap
+tqdm
+pyarrow
