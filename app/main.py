@@ -36,6 +36,9 @@ def main():
     caminho_output_dir = "./../data/processed/"
     caminho_features = "./../data/processed/train_tabular_final.parquet"
     caminho_labels_glob = "./../data/raw/parquet/train_labels/data_*.parquet"
+    caminho_treino_split = "./../data/processed/merge_split/train_80.parquet"
+    caminho_saida_selecao = "./../data/processed/selection/train_80_selected.parquet"
+    caminho_lista_features = "./../data/processed/selection/selected_features_list.txt"
     
     # Arquivos de saída das Fases 1 e 2
     arquivo_intermediario = os.path.join(caminho_output_dir, "temp_temporal.parquet")
@@ -134,11 +137,7 @@ def main():
     # FASE 4: FEATURE SELECTION (Somente no Treino)
     # =========================================================
     logger.info("=== INICIANDO FASE 4: FEATURE SELECTION ===")
-    try:
-        # Configuração de caminhos específicos para a seleção
-        caminho_treino_split = "./../data/processed/split/train_80.parquet"
-        caminho_saida_selecao = "./../data/processed/selection/train_80_selected.parquet"
-        caminho_lista_features = "./../data/processed/selection/selected_features_list.txt"
+    try:        
         
         os.makedirs(os.path.dirname(caminho_saida_selecao), exist_ok=True)
         
