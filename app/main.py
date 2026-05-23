@@ -32,8 +32,8 @@ def main():
     # ---------------------------------------------------------
     # CONFIGURAÇÃO DE CAMINHOS GERAIS
     # ---------------------------------------------------------
-    caminho_input_glob = "./data/raw/parquet/train/data_*.parquet"
-    caminho_output_dir = "./data/processed/"
+    caminho_input_glob = "./../data/raw/parquet/train/data_*.parquet"
+    caminho_output_dir = "./../data/processed/"
     
     # Arquivos de saída das Fases 1 e 2
     arquivo_intermediario = os.path.join(caminho_output_dir, "temp_temporal.parquet")
