@@ -34,6 +34,8 @@ def main():
     # ---------------------------------------------------------
     caminho_input_glob = "./../data/raw/parquet/train/data_*.parquet"
     caminho_output_dir = "./../data/processed/"
+    caminho_features = "./../data/processed/train_tabular_final.parquet"
+    caminho_labels_glob = "./../data/raw/parquet/train_labels/data_*.parquet"
     
     # Arquivos de saída das Fases 1 e 2
     arquivo_intermediario = os.path.join(caminho_output_dir, "temp_temporal.parquet")
@@ -122,7 +124,7 @@ def main():
     logger.info("=== INICIANDO FASE 3: MERGE E SPLIT ESTRATIFICADO ===")
     try:
         from pipeline.merge_split import merge_and_split
-        merge_and_split()
+        merge_and_split(caminho_features, caminho_labels_glob, caminho_output_dir)
         logger.info("Fase 3 (Merge e Split) concluída com sucesso.")
     except Exception as e:
         logger.exception(f"Erro na Fase 3 (Merge e Split Estratificado): {e}")
@@ -134,9 +136,9 @@ def main():
     logger.info("=== INICIANDO FASE 4: FEATURE SELECTION ===")
     try:
         # Configuração de caminhos específicos para a seleção
-        caminho_treino_split = "./data/processed/split/train_80.parquet"
-        caminho_saida_selecao = "./data/processed/selection/train_80_selected.parquet"
-        caminho_lista_features = "./data/processed/selection/selected_features_list.txt"
+        caminho_treino_split = "./../data/processed/split/train_80.parquet"
+        caminho_saida_selecao = "./../data/processed/selection/train_80_selected.parquet"
+        caminho_lista_features = "./../data/processed/selection/selected_features_list.txt"
         
         os.makedirs(os.path.dirname(caminho_saida_selecao), exist_ok=True)
         
