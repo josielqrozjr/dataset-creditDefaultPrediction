@@ -42,10 +42,11 @@ def convert_csv_to_parquet(csv_path, output_dir, dataset_name):
     query = f"""
 COPY (
     SELECT *
-    FROM read_csv_auto(
+    FROM read_csv(
         '{csv_path}',
-        ignore_errors=true,
-        sample_size=-1
+        auto_detect=true,
+        header=true,
+        all_varchar=true
     )
 )
 TO '{output_dir}'
