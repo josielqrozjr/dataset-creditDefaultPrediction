@@ -66,7 +66,7 @@ def merge_and_split(path_features, path_labels_glob, output_dir):
 
 def main():
     merge_and_split(
-        path_features="./../../data/processed/train_tabular_final.parquet",
+        path_features="./../../data/processed/dataset_final.parquet",
         path_labels_glob="./../../data/raw/parquet/train_labels/data_*.parquet",
         output_dir="./../../data/processed/"
     )

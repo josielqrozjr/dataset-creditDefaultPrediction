@@ -34,7 +34,7 @@ def main():
     # ---------------------------------------------------------
     caminho_input_glob = "./../data/raw/parquet/train/data_*.parquet"
     caminho_output_dir = "./../data/processed/"
-    caminho_features = "./../data/processed/train_tabular_final.parquet"
+    caminho_features = "./../data/processed/dataset_final.parquet"
     caminho_labels_glob = "./../data/raw/parquet/train_labels/data_*.parquet"
     caminho_treino_split = "./../data/processed/merge_split/train_80.parquet"
     caminho_saida_selecao = "./../data/processed/selection/train_80_selected.parquet"
@@ -42,7 +42,7 @@ def main():
     
     # Arquivos de saída das Fases 1 e 2
     arquivo_intermediario = os.path.join(caminho_output_dir, "temp_temporal.parquet")
-    arquivo_final = os.path.join(caminho_output_dir, "train_tabular_final.parquet")
+    arquivo_final = os.path.join(caminho_output_dir, "dataset_final.parquet")
     
     os.makedirs(caminho_output_dir, exist_ok=True)
     
