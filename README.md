@@ -118,16 +118,15 @@ Para uso acadêmico, recomenda-se:
 - documentar o contrato de consumo da base (formato, partições, nomes de colunas e convenções);
 - manter rastreabilidade das versões publicadas para os repositórios consumidores.
 
+
 ## 9. Limitações Atuais
 
-Por definição de escopo, este projeto não inclui:
+Por definição de escopo, no momento atual este projeto não inclui:
 
 - notebook de análise exploratória;
-- pipeline de engenharia de atributos;
 - treinamento e validação de modelos;
-- geração automatizada de arquivo de submissão.
 
-Esses itens devem ser implementados nos repositórios que consomem esta base.
+Esses itens devem ser implementados posteriormente.
 
 ## 10. Referência
 
