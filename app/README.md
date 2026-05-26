@@ -99,5 +99,3 @@ Com a conclusão bem-sucedida deste pipeline, os dados encontram-se matematicame
 4. **Meta-Classificadores Avançados (Ensembles Heterogêneos):** *Voting Classifier, Blending* (com Logistic Regression, KNN, Random Forest, XGBoost) e *Stacking* (com Naive Bayes, KNN, Logistic Regression).
 
 Todos os modelos serão avaliados competitivamente sob as métricas de ROC-AUC, F1-Score, Precisão e a métrica de sensibilidade oficial estipulada pela American Express.
-documentacao_pipeline_amex.md
-Displaying documentacao_pipeline_amex.md.
