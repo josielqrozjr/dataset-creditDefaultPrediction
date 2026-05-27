@@ -5,7 +5,7 @@ Este documento é o guia interno de engenharia para a construção do orquestrad
 ## Fase 0: Infraestrutura e Configurações Base
 - [X] Criar `src/evaluation/amex_metric.py` (Implementar a fórmula matemática oficial da AMEX: Gini + Top 4%).
 - [X] Atualizar `src/evaluation/metrics.py` (Adicionar suporte a `StratifiedKFold` e `AMEX Metric`).
-- [ ] Atualizar `src/config.py` (Definir caminhos, *seeds*, dicionário de modelos atualizado, remover modelos descartados, configurar grades do Optuna).
+- [X] Atualizar `src/config.py` (Definir caminhos, *seeds*, dicionário de modelos atualizado, remover modelos descartados, configurar grades do Optuna).
 - [ ] Atualizar arquivos base dos modelos em `src/models/` (Adicionar CatBoost, LightGBM, ajustar pipelines de Stacking/Blending).
 
 ## Fase 1: Provas de Conceito (Validação Metodológica)
@@ -34,8 +34,13 @@ Este documento é o guia interno de engenharia para a construção do orquestrad
 - [ ] Construir *Blending Classifier* (Com holdout explícito).
 - [ ] Coletar métricas finais e coroar o modelo campeão absoluto.
 
-## Fase 5: Relatórios e Visualização
+## Fase 5: Prova de Estabilidade (O Modelo Campeão)
+- [ ] Isolar o modelo de melhor performance absoluta do benchmark (ex: XGBoost otimizado ou Stacking final).
+- [ ] Executar o modelo campeão 5 vezes utilizando sementes aleatórias distintas (ex: `SEEDS = [42, 123, 999, 2024, 777]`).
+- [ ] Calcular a média e o desvio padrão do AMEX Score e ROC-AUC para gerar o intervalo de confiança estatístico do TCC.
+
+## Fase 6: Relatórios e Visualização
 - [ ] Desenvolver `src/evaluation/visualization.py` (Atualizado).
 - [ ] Gerar gráficos de barras agrupadas (ROC-AUC *vs* AMEX Score).
 - [ ] Gerar curvas Precision-Recall comparativas.
-- [ ] Compilar CSV final unificando Treino (CV) e Validação/Teste (20% isolado).
+- [ ] Compilar tabela final unificando Treino (CV), Teste Isolado (20%) e o Intervalo de Confiança da Prova de Estabilidade.
