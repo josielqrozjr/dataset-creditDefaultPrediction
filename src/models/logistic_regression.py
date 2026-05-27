@@ -1,8 +1,7 @@
 """Regressão Logística."""
 
 from sklearn.linear_model import LogisticRegression
-
-from src.config import RANDOM_SEED, HYPERPARAMS
+from config import RANDOM_SEED, HYPERPARAMS
 
 
 def build_model():

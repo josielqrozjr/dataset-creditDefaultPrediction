@@ -1,8 +1,7 @@
 """Redes Neurais Artificiais (MLP)."""
 
 from sklearn.neural_network import MLPClassifier
-
-from src.config import RANDOM_SEED, HYPERPARAMS
+from config import RANDOM_SEED, HYPERPARAMS
 
 
 def build_model():

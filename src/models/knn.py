@@ -1,8 +1,7 @@
 """K-Nearest Neighbors."""
 
 from sklearn.neighbors import KNeighborsClassifier
-
-from src.config import HYPERPARAMS
+from config import HYPERPARAMS
 
 
 def build_model():

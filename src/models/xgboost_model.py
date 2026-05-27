@@ -1,8 +1,7 @@
 """XGBoost."""
 
 from xgboost import XGBClassifier
-
-from src.config import RANDOM_SEED, HYPERPARAMS
+from config import RANDOM_SEED, HYPERPARAMS
 
 
 def build_model():
