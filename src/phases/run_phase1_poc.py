@@ -33,8 +33,8 @@ def run_dimensionality_poc(X_full: pd.DataFrame, X_reduced: pd.DataFrame, y: pd.
     
     # Instanciamos os modelos com balanceamento algorítmico já ativado
     models = {
-        "Logistic Regression": LogisticRegression(class_weight="balanced", max_iter=1000, n_jobs=-1, random_state=RANDOM_SEED),
-        "XGBoost": XGBClassifier(scale_pos_weight=3, n_estimators=200, max_depth=6, n_jobs=-1, random_state=RANDOM_SEED)
+        "Logistic Regression": LogisticRegression(class_weight="balanced", max_iter=1000, random_state=RANDOM_SEED),
+        "XGBoost": XGBClassifier(scale_pos_weight=3, n_estimators=200, max_depth=6, random_state=RANDOM_SEED)
     }
 
     for db_name, X_data in datasets.items():
@@ -81,8 +81,8 @@ def run_balancing_poc(X_reduced: pd.DataFrame, y: pd.Series):
         
         # Ajuste dinâmico dos dados e hiperparâmetros com base na estratégia
         X_train_run, y_train_run = X_train, y_train
-        lr_kwargs = {"max_iter": 1000, "n_jobs": -1, "random_state": RANDOM_SEED}
-        xgb_kwargs = {"n_estimators": 200, "max_depth": 6, "n_jobs": -1, "random_state": RANDOM_SEED}
+        lr_kwargs = {"max_iter": 1000, "random_state": RANDOM_SEED}
+        xgb_kwargs = {"n_estimators": 200, "max_depth": 6, "random_state": RANDOM_SEED}
 
         if strategy == "Undersampling (Físico)":
             sampler = RandomUnderSampler(random_state=RANDOM_SEED)
@@ -139,6 +139,7 @@ def main():
         # Carrega a lista de features mapeada no config
         with open(SELECTED_FEATURES_PATH, "r") as f:
             selected_cols = [line.strip() for line in f.readlines()]
+            selected_cols.remove("target")
             
         X_reduced = X_full[selected_cols]
         
