@@ -11,15 +11,15 @@ from pathlib import Path
 # =====================================================================
 # 1. Diretórios e Caminhos
 # =====================================================================
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = Path(__file__).resolve().parent
 DATA_PROCESSED = PROJECT_ROOT / "data" / "processed"
 RESULTS_DIR = PROJECT_ROOT / "results"
 RESULTS_BEST_MODELS = PROJECT_ROOT / "results_best_models"
 
 # Arquivos de Dados Específicos
-TRAIN_DATA_PATH = DATA_PROCESSED / "train_aggregated.parquet"
-TEST_DATA_PATH = DATA_PROCESSED / "valid_20.parquet"
-SELECTED_FEATURES_PATH = DATA_PROCESSED / "selected_features_list.txt"
+TRAIN_DATA_PATH = DATA_PROCESSED / "merge_split" / "train_80.parquet"
+TEST_DATA_PATH = DATA_PROCESSED / "merge_split" / "valid_20.parquet"
+SELECTED_FEATURES_PATH = DATA_PROCESSED / "selection" / "selected_features_list.txt"
 
 # =====================================================================
 # 2. Reprodutibilidade e Divisão de Dados
