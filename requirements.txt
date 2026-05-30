@@ -1,12 +1,12 @@
---extra-index-url https://download.pytorch.org/whl/cu121
+--extra-index-url https://download.pytorch.org/whl/cu130
 --extra-index-url https://pypi.nvidia.com
 
 # 1. Ecossistema RAPIDS e GPU (Obrigatórios para a nossa nova arquitetura)
-cudf-cu12
-cuml-cu12
-cupy-cuda12x
+cudf-cu13
+cuml-cu13
+cupy-cuda13x
 
-# 2. Deep Learning (Alinhado com CUDA 12.1 para evitar conflitos)
+# 2. Deep Learning
 torch
 
 # 3. Modelos de Boosting (Com suporte nativo a GPU)
