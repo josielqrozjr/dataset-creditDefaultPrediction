@@ -7,7 +7,7 @@ cuml-cu13
 cupy-cuda13x
 
 # 2. Deep Learning
-#torch
+torch
 
 # 3. Modelos de Boosting (Com suporte nativo a GPU)
 xgboost
