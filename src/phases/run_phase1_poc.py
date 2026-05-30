@@ -5,13 +5,14 @@ Este script executa dois experimentos empíricos fundamentais para o TCC:
 1. Comprova a eficácia do Feature Selection (Base Completa vs Base Enxuta).
 2. Comprova a superioridade do Balanceamento Algorítmico contra Undersampling.
 
-Toda a manipulação de dados e treinamento ocorre nativamente na VRAM.
+Toda a manipulação final e treinamento ocorre nativamente na VRAM.
 """
 
 import sys
 import time
 import logging
 import gc
+import polars as pl
 import pandas as pd
 import cudf
 import cupy as cp
@@ -29,27 +30,19 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)-7s | 
 logger = logging.getLogger(__name__)
 
 def gpu_random_undersampler(X: cudf.DataFrame, y: cudf.Series, random_state: int = 42):
-    """
-    Função customizada para realizar Undersampling diretamente na GPU,
-    já que o imblearn não suporta aceleração por hardware.
-    """
     df = X.copy()
     df['target'] = y
     
     minority = df[df['target'] == 1]
     majority = df[df['target'] == 0]
     
-    # Amostra a classe majoritária para igualar o tamanho da minoritária
     majority_sampled = majority.sample(n=len(minority), random_state=random_state)
-    
-    # Concatena e embaralha os dados
     undersampled = cudf.concat([minority, majority_sampled]).sample(frac=1.0, random_state=random_state)
     
     return undersampled.drop(columns=['target']), undersampled['target']
 
 
 def run_dimensionality_poc(X_full: cudf.DataFrame, X_reduced: cudf.DataFrame, y: cudf.Series):
-    """Experimento 1: Maldição da Dimensionalidade e Feature Selection."""
     logger.info("=== Iniciando Experimento 1: Dimensionalidade ===")
     
     results = []
@@ -60,7 +53,6 @@ def run_dimensionality_poc(X_full: cudf.DataFrame, X_reduced: cudf.DataFrame, y:
     xgb_params["device"] = "cuda"
 
     models = {
-        # O cuML utiliza o solver Quasi-Newton (qn) no lugar do lbfgs
         "Logistic Regression": LogisticRegression(max_iter=500, solver='qn'),
         "XGBoost": XGBClassifier(**xgb_params)
     }
@@ -78,7 +70,6 @@ def run_dimensionality_poc(X_full: cudf.DataFrame, X_reduced: cudf.DataFrame, y:
             model.fit(X_train, y_train)
             train_time = time.time() - start_time
             
-            # Extração de probabilidades. O cuML pode retornar um array 1D no modo binário.
             preds = model.predict_proba(X_val)
             preds_positive = preds[:, 1] if len(preds.shape) > 1 else preds
             
@@ -101,13 +92,11 @@ def run_dimensionality_poc(X_full: cudf.DataFrame, X_reduced: cudf.DataFrame, y:
 
 
 def run_balancing_poc(X_reduced: cudf.DataFrame, y: cudf.Series):
-    """Experimento 2: Impacto das estratégias de tratamento de classe minoritária."""
     logger.info("=== Iniciando Experimento 2: Tratamento de Desbalanceamento ===")
     
     results = []
     
     X_train, X_val, y_train, y_val = train_test_split(X_reduced, y, test_size=0.2, stratify=y, random_state=RANDOM_SEED)
-
     strategies = ["Sem Balanceamento", "Undersampling (Físico)", "Algorítmico (Cost-Sensitive)"]
     
     for strategy in strategies:
@@ -120,8 +109,6 @@ def run_balancing_poc(X_reduced: cudf.DataFrame, y: cudf.Series):
         if strategy == "Undersampling (Físico)":
             X_train_run, y_train_run = gpu_random_undersampler(X_train, y_train, random_state=RANDOM_SEED)
         elif strategy == "Algorítmico (Cost-Sensitive)":
-            # Nota técnica: cuML Logistic Regression não suporta class_weight nativamente.
-            # O peso do experimento recairá no XGBoost para validar a hipótese metodológica.
             xgb_kwargs["scale_pos_weight"] = 3
 
         models = {
@@ -157,46 +144,55 @@ def run_balancing_poc(X_reduced: cudf.DataFrame, y: cudf.Series):
 def main():
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     
-    logger.info("Passo 1: Carregando base de dados nativamente na GPU com cuDF...")
+    logger.info("Passo 1: Carregando dados na RAM (Polars) para evitar gargalo de descompressão na VRAM...")
     try:
-        df_full = cudf.read_parquet(TRAIN_DATA_PATH)
+        df_lazy = pl.scan_parquet(TRAIN_DATA_PATH)
+        df_pd = df_lazy.collect().to_pandas()
         
-        logger.info("Passo 2: Removendo colunas de texto (Prevenção de Erro 'String to Float')...")
-        cols_to_drop = [col for col in ["customer_ID", "S_2"] if col in df_full.columns]
+        logger.info("Passo 2: Removendo strings e espremendo memória na RAM...")
+        cols_to_drop = [col for col in ["customer_ID", "S_2"] if col in df_pd.columns]
         if cols_to_drop:
-            df_full = df_full.drop(columns=cols_to_drop)
+            df_pd = df_pd.drop(columns=cols_to_drop)
             
-        # Garante que qualquer outra string que tenha sobrado seja removida verificando os dtypes
-        object_cols = [col for col, dtype in df_full.dtypes.items() if dtype in ['object', 'string', 'category']]
+        object_cols = df_pd.select_dtypes(include=['object', 'string', 'category']).columns
         if len(object_cols) > 0:
-            df_full = df_full.drop(columns=object_cols)
+            df_pd = df_pd.drop(columns=object_cols)
 
-        logger.info("Passo 3: Convertendo tipos para float32 (Economia de VRAM)...")
-        y = df_full["target"].astype("int8")
-        X_full = df_full.drop(columns=["target"]).astype("float32")
-        
-        del df_full
+        # Separando X e y ainda na RAM com float32
+        y_cpu = df_pd["target"].astype("int8")
+        X_full_cpu = df_pd.drop(columns=["target"]).astype("float32")
+        del df_pd
         gc.collect()
         
-        logger.info("Passo 4: Carregando lista de features da base enxuta...")
+        logger.info("Passo 3: Mapeando a base enxuta...")
         with open(SELECTED_FEATURES_PATH, "r") as f:
             selected_cols = [line.strip() for line in f.readlines()]
             if "target" in selected_cols:
                 selected_cols.remove("target")
+            selected_cols = [col for col in selected_cols if col in X_full_cpu.columns]
             
-            selected_cols = [col for col in selected_cols if col in X_full.columns]
-            
-        X_reduced = X_full[selected_cols]
-        logger.info(f"Formato -> Completa: {X_full.shape} | Enxuta: {X_reduced.shape}")
+        X_reduced_cpu = X_full_cpu[selected_cols]
         
-    except FileNotFoundError as e:
-        logger.exception(f"Arquivo não encontrado: {e.filename}")
-        sys.exit(1)
+        logger.info("Passo 4: Injetando as matrizes limpas na GPU (cuDF)...")
+        y = cudf.from_pandas(y_cpu)
+        X_reduced = cudf.from_pandas(X_reduced_cpu)
+        
+        # A base completa de ~4.7GB vai para a GPU agora. É o teste de fogo dos 6GB da RTX 4050.
+        X_full = cudf.from_pandas(X_full_cpu)
+        
+        logger.info(f"VRAM populada. Formatos -> Completa: {X_full.shape} | Enxuta: {X_reduced.shape}")
+        
+        # Deletando as cópias da CPU para liberar RAM padrão do Windows
+        del X_full_cpu, X_reduced_cpu, y_cpu
+        gc.collect()
+        
     except Exception as e:
         logger.exception(f"Erro fatal no processamento dos dados: {e}")
         sys.exit(1)
 
     # 1. Roda a Prova de Dimensionalidade
+    # AVISO: Se a sua placa de vídeo tiver OOM, será exatamente dentro dessa função,
+    # na hora de treinar o XGBoost com a X_full.
     df_dim = run_dimensionality_poc(X_full, X_reduced, y)
     df_dim.to_csv(RESULTS_DIR / "poc_01_dimensionalidade.csv", index=False)
     
