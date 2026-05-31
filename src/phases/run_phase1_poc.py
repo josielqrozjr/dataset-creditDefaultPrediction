@@ -16,6 +16,8 @@ from pathlib import Path
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
 from xgboost import XGBClassifier
 from imblearn.under_sampling import RandomUnderSampler
 
@@ -45,7 +47,10 @@ def run_dimensionality_poc(X_full: pd.DataFrame, X_reduced: pd.DataFrame, y: pd.
         xgb_params["device"] = "cuda"
 
     models = {
-        "Logistic Regression": LogisticRegression(class_weight="balanced", max_iter=500, random_state=RANDOM_SEED),
+        "Logistic Regression": Pipeline([
+            ("imputer", SimpleImputer(strategy="median")),
+            ("classifier", LogisticRegression(class_weight="balanced", max_iter=500, random_state=RANDOM_SEED))
+        ]),
         "XGBoost": XGBClassifier(**xgb_params)
     }
 
@@ -111,7 +116,10 @@ def run_balancing_poc(X_reduced: pd.DataFrame, y: pd.Series):
             xgb_kwargs["scale_pos_weight"] = 3
 
         models = {
-            "Logistic Regression": LogisticRegression(**lr_kwargs),
+            "Logistic Regression": Pipeline([
+                ("imputer", SimpleImputer(strategy="median")),
+                ("classifier", LogisticRegression(**lr_kwargs))
+            ]),
             "XGBoost": XGBClassifier(**xgb_kwargs)
         }
 
