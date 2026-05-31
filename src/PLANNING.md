@@ -10,9 +10,9 @@ Este documento é o guia interno de engenharia para a construção do orquestrad
 
 ## Fase 1: Provas de Conceito (Validação Metodológica)
 - [X] Desenvolver `run_phase1_poc.py`.
-- [ ] Executar LR e XGBoost: Base Completa (3.265 features) *vs.* Base Enxuta (400 features).
-- [ ] Executar LR e XGBoost: Sem Balanceamento *vs.* Undersampling *vs.* Scale Pos Weight / Class Weight.
-- [ ] Exportar tabelas de resultados que justificarão as próximas fases.
+- [X] Executar LR e XGBoost: Base Completa (3.265 features) *vs.* Base Enxuta (400 features).
+- [X] Executar LR e XGBoost: Sem Balanceamento *vs.* Undersampling *vs.* Scale Pos Weight / Class Weight.
+- [X] Exportar tabelas de resultados que justificarão as próximas fases.
 
 ## Fase 2: Campeonato Aberto (Baseline dos 10 Modelos)
 - [ ] Desenvolver `run_phase2_benchmark.py`.
