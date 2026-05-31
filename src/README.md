@@ -87,3 +87,18 @@ A tabela a seguir detalha o escopo de avaliação do benchmark:
 | **F1-Score** | Média harmônica matemática entre Precision e Recall. | Força o equilíbrio do modelo. Impede que algoritmos obtenham pontuações altas apenas aprovando todos os clientes ou apenas negando crédito para todos. |
 | **Precision (Precisão)** | Verdadeiros Positivos / (Verdadeiros Positivos + Falsos Positivos). | Mede o custo do alarme falso. Baixa precisão indica que o modelo está negando crédito para bons pagadores, gerando perda de receita para a instituição. |
 | **Recall (Sensibilidade)** | Verdadeiros Positivos / (Verdadeiros Positivos + Falsos Negativos). | Mede a capacidade de proteção financeira. Baixo recall indica que o modelo falhou em detectar inadimplentes reais, gerando prejuízo direto por calote. |
+
+# 6. Roadmap Visual do Benchmark
+
+```mermaid
+graph TD
+    A[Fase 1: Provas de Conceito<br/>Validação de FS e Balanceamento] -->|Justifica o corte para 400 variáveis| B(Fase 2: Campeonato Aberto<br/>10 Modelos com Configurações de Fábrica)
+    B -->|Elimina os 7 piores| C(Fase 3: Otimização Optuna<br/>Busca Matemática Extrema no Top 3)
+    C -->|Exporta os 3 Modelos Elite| D{Fase 4: Meta-Classificadores}
+    D --> E[Voting Classifier<br/>Média dos 3]
+    D --> F[Stacking Classifier<br/>Um modelo aprende com os 3]
+    D --> G[Blending Classifier<br/>Holdout dos 3]
+    E -.-> H((Comparação Final))
+    F -.-> H((Comparação Final))
+    G -.-> H((Comparação Final))
+```
