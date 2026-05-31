@@ -92,8 +92,8 @@ A tabela a seguir detalha o escopo de avaliação do benchmark:
 
 ```mermaid
 graph TD
-    A[Fase 1: Provas de Conceito<br/>Validação de FS e Balanceamento] -->|Justifica o corte para 400 variáveis| B(Fase 2: Campeonato Aberto<br/>10 Modelos com Configurações de Fábrica)
-    B -->|Elimina os 7 piores| C(Fase 3: Otimização Optuna<br/>Busca Matemática Extrema no Top 3)
+    A[Fase 1: Provas de Conceito<br/>Validação de FS e Balanceamento] -->|Justifica o corte para 400 variáveis| B(Fase 2: Campeonato Aberto<br/>7 Modelos com Configurações Padrão)
+    B -->|Elimina os 4 piores| C(Fase 3: Otimização Optuna<br/>Busca Matemática Extrema no Top 3)
     C -->|Exporta os 3 Modelos Elite| D{Fase 4: Meta-Classificadores}
     D --> E[Voting Classifier<br/>Média dos 3]
     D --> F[Stacking Classifier<br/>Um modelo aprende com os 3]
