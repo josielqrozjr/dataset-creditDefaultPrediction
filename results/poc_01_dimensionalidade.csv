@@ -1,0 +1,5 @@
+Experimento,Modelo,Base de Dados,Tempo Treino (s),AMEX Score,ROC AUC,AUPRC
+Dimensionalidade,Logistic Regression,Completa (3265 features),4323.88,0.1169078773480713,0.5879595510712763,0.31787433620135647
+Dimensionalidade,XGBoost,Completa (3265 features),761.48,0.7710403248243713,0.9562136061288727,0.8848605178589903
+Dimensionalidade,Logistic Regression,Enxuta (400 features),85.79,0.7475510159978269,0.9487143207218605,0.8642119623740565
+Dimensionalidade,XGBoost,Enxuta (400 features),20.52,0.7749389656951853,0.9574822890052607,0.8877502043698455

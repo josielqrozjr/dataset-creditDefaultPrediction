@@ -1,0 +1,7 @@
+Experimento,Modelo,Estratégia,Tempo Treino (s),AMEX Score,AUPRC,Recall
+Balanceamento,Logistic Regression,Sem Balanceamento,78.17,0.7447906616580733,0.8643932584596096,0.7533662949715969
+Balanceamento,XGBoost,Sem Balanceamento,20.48,0.7749817200924345,0.8868496350179779,0.7993372606774669
+Balanceamento,Logistic Regression,Undersampling (Físico),40.77,0.7502842668365465,0.8664514272536056,0.8855985693246371
+Balanceamento,XGBoost,Undersampling (Físico),13.0,0.7688782677103343,0.8838971538025976,0.9120029455081001
+Balanceamento,Logistic Regression,Algorítmico (Cost-Sensitive),83.74,0.7475510159978269,0.8642119623740565,0.8841784136334946
+Balanceamento,XGBoost,Algorítmico (Cost-Sensitive),20.31,0.7749389656951853,0.8877502043698455,0.8917525773195877
