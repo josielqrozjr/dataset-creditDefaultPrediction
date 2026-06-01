@@ -126,8 +126,12 @@ def main():
         
         # Executa K-Fold
         for fold, (train_idx, val_idx) in enumerate(skf.split(X, y)):
-            X_train, y_train = X.iloc[train_idx].copy(), y.iloc[train_idx].copy()
-            X_val = X.iloc[val_idx].copy()
+            # Extração segura: Converte diretamente para matriz NumPy garantindo que a memória
+            # é contígua em formato 'C' (padrão C++). Isso evita o Segmentation Fault no Mac M1.
+            X_train = np.ascontiguousarray(X.iloc[train_idx].values)
+            y_train = np.ascontiguousarray(y.iloc[train_idx].values)
+            
+            X_val = np.ascontiguousarray(X.iloc[val_idx].values)
             
             # Treinamento
             model.fit(X_train, y_train)
