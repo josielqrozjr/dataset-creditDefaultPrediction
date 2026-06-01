@@ -84,7 +84,7 @@ HYPERPARAMS = {
         "learning_rate": 0.1,
         "is_unbalance": True,  # Balanceamento nativo do LGBM
         "random_state": RANDOM_SEED,
-        "n_jobs": -1,
+        "n_jobs": 4,
         "device": "gpu" if GPU_AVAILABLE else "cpu",
     },
     "XGBoost": {
@@ -94,7 +94,7 @@ HYPERPARAMS = {
         "scale_pos_weight": 3,  # Proxy de balanceamento (75% / 25%)
         "eval_metric": "logloss",
         "random_state": RANDOM_SEED,
-        "n_jobs": -1,
+        "n_jobs": 4,
         "tree_method": "gpu_hist" if GPU_AVAILABLE else "hist",
         "device": "cuda" if GPU_AVAILABLE else "cpu",
     },
